@@ -22,6 +22,7 @@ def build_word_graph(word_list):
 def word_ladder(start, target, word_graph):
     visited = set()
     queue = deque([(start, [start])])
+    print("Starting queue: " + str(queue))
 
     while queue:
         current_word, path = queue.popleft()
@@ -43,7 +44,10 @@ def user_input_word_ladder():
     with open('four_letter_words.txt', 'r') as f:
         word_list = [word.strip().lower() for word in f.readlines()]
 
+    print("Read " + str(len(word_list)) + " words.")
+    
     word_graph = build_word_graph(word_list)
+    # print(word_graph)
 
     start = input("Enter the starting four-letter word: ").strip().lower()
     target = input("Enter the target four-letter word: ").strip().lower()
