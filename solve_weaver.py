@@ -1,11 +1,11 @@
 from collections import defaultdict, deque
 
-def build_word_graph(word_list):
+def build_word_graph(words: set):
     d = defaultdict(list)
     word_graph = defaultdict(list)
 
     # Populate the dictionary with word families
-    for word in word_list:
+    for word in words:
         for i in range(len(word)):
             bucket = word[:i] + "_" + word[i+1:]
             d[bucket].append(word)

@@ -15,15 +15,28 @@ async def read_items(q: Annotated[Union[str, None], Query(min_length=3, max_leng
     return results
 
 # Create word list
-with open('four_letter_words.txt', 'r') as f:
-    word_list = [word.strip().lower() for word in f.readlines()]
+def create_word_graph():
+    words = set()
+    excluded_words = set()
+    with open('four_letter_words.txt', 'r') as f:
+        for line in f:
+            words.add(line.strip().lower())
+    try:
+        with open("excluded_words.txt") as f:
+            for line in f:
+                excluded_words.add(line.strip().lower())
+    except FileNotFoundError:
+        pass
+    print(f"Read {len(words)} words and {len(excluded_words)} excluded words")
+    return sw.build_word_graph(words - excluded_words)
 
-print("Read " + str(len(word_list)) + " words.")
+
     
-word_graph = sw.build_word_graph(word_list)
+word_graph = create_word_graph()
 
 @app.get("/wordladder/")
-async def getwordladder(start:str = "", end:str = ""):
+async def getwordladder(start:Annotated[str, Query(min_length=4, max_length=4, title = "Starting word")], 
+                        end:Annotated[str, Query(min_length=4, max_length=4, title = "Target word")]):
     print(f"Going from {start} to {end}")
     path = sw.word_ladder(start, end, word_graph)
     print(f"Path from {start} to {end} is {path}")
