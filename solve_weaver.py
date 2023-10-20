@@ -1,8 +1,7 @@
 from collections import defaultdict, deque
 
-def build_word_graph(words: set):
+def build_word_graph(words: set, word_graph = defaultdict(list)):
     d = defaultdict(list)
-    word_graph = defaultdict(list)
 
     # Populate the dictionary with word families
     for word in words:
