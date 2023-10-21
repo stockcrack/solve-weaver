@@ -1,5 +1,5 @@
 #!/bin/sh
-'''exec' "/Users/harley/Documents/MBP Docs/Visual Studio Code Zone/solve-weaver/solve-weaver/bin/python" "$0" "$@"
+'''exec' "/Users/harley/Documents/MBP Docs/Visual Studio Code Zone/solve-weaver/solve-weaver/bin/python3.12" "$0" "$@"
 ' '''
 # -*- coding: utf-8 -*-
 import re

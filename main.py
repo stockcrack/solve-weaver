@@ -4,35 +4,35 @@ import solve_weaver as sw
 from typing import Union, Annotated
 from pydantic import BaseModel
 
-
 app = FastAPI()
 
-@app.get("/items/")
-async def read_items(q: Annotated[Union[str, None], Query(min_length=3, max_length=50)] = None):
-    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
-    if q:
-        results.update({"q": q})
-    return results
+class Item(BaseModel):
+    name: str
+    description: str | None = None
+    price: float
+    tax: float | None = None
+    tags: set[str] = set()
 
-# Create word list
-def create_word_graph():
-    words = set()
-    excluded_words = set()
-    with open('four_letter_words.txt', 'r') as f:
+
+@app.put("/items/{item_id}")
+async def update_item(item_id: int, item: Item):
+    results = {"item_id": item_id, "item": item}
+    return results
+    
+def read_words(words: set, filename: str):
+    with open(filename, 'r') as f:
         for line in f:
             words.add(line.strip().lower())
-    try:
-        with open("excluded_words.txt") as f:
-            for line in f:
-                excluded_words.add(line.strip().lower())
-    except FileNotFoundError:
-        pass
-    print(f"Read {len(words)} words and {len(excluded_words)} excluded words")
+    print(f"Read {len(words)} from {filename}")
+    return words
+
+# Create word list
+def create_word_graph(words, excluded_words):
     return sw.build_word_graph(words - excluded_words)
 
-
-    
-word_graph = create_word_graph()
+words = read_words(set(), 'four_letter_words.txt')
+excluded_words = read_words(set(), 'excluded_words.txt')
+word_graph = create_word_graph(words, excluded_words)
 
 @app.get("/wordladder/")
 async def getwordladder(start:Annotated[str, Query(min_length=4, max_length=4, title = "Starting word")], 
@@ -51,6 +51,19 @@ async def getwordladder2(
     print(f"Path from {start} to {end} is {path}")
     return { "result": path }
 
+@app.get("/exclude/{word}")
+async def exclude_word(word: Annotated[str, Path(min_length=4, max_length=4, title="Excluded word")]):
+    if word in excluded_words:
+        print(f"Word {word} already excluded.")
+        return None
+    else:
+        print(f"Excluding {word}")
+        excluded_words.add(word)
+        sw.build_word_graph(words - excluded_words)
+        with(open("excluded_words.txt",'a')) as f:
+            print(word, file=f)
+        return word
+    
 
 
 
