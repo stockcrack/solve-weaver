@@ -37,10 +37,11 @@ def word_ladder(start, target, word_graph):
     return None
 
 def valid_word(word):
-    return len(word) == 4 and all('a' <= char <= 'z' for char in word)
+    return (len(word) == 4 or len(word) == 5) and all('a' <= char <= 'z' for char in word)
 
-def user_input_word_ladder():
-    with open('four_letter_words.txt', 'r') as f:
+def user_input_word_ladder(l = 4):
+    word_file = 'four_letter_words.txt' if (l == 4) else 'five_letter_words.txt'
+    with open(word_file, 'r') as f:
         word_list = [word.strip().lower() for word in f.readlines()]
 
     print("Read " + str(len(word_list)) + " words.")
@@ -48,8 +49,8 @@ def user_input_word_ladder():
     word_graph = build_word_graph(word_list)
     # print(word_graph)
 
-    start = input("Enter the starting four-letter word: ").strip().lower()
-    target = input("Enter the target four-letter word: ").strip().lower()
+    start = input("Enter the starting word: ").strip().lower()
+    target = input("Enter the target word: ").strip().lower()
 
     # Ensure the provided words are valid
     if not (valid_word(start) and valid_word(target)):
