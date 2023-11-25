@@ -23,7 +23,8 @@ def main():
     # save_to_file(four_letter_words, "four_letter_words.txt")
     count4 = 0
     count5 = 0
-    input_file = "words_alpha.txt"
+    #input_file = "words_alpha.txt"
+    input_file = "twl06.txt"  # This is the file used by the actual game, should avoid needing excluded words...
     output_file4 = "four_letter_words.txt"
     output_file5 = "five_letter_words.txt"
     with open(input_file, "r") as i_f:

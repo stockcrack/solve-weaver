@@ -96,3 +96,6 @@ deas
 petr
 teer
 sleer
+colk
+woon
+bolk
