@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Query, Path
+from fastapi.middleware.cors import CORSMiddleware
 from enum import Enum
 import solve_weaver as sw
 from typing import Union, Annotated, Any
@@ -7,6 +8,15 @@ import sys
 from collections import defaultdict
 
 app = FastAPI()
+
+# Set up CORS middleware options
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 class Item(BaseModel):
     name: str
