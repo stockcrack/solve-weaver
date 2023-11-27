@@ -85,24 +85,54 @@ const App = () => {
 
   return (
     <div>
-      <div>
-        <input 
+    <h1>Word Weaver Solver</h1>
+    <table>
+      <tbody>
+      <tr>
+      <td>
+        <label htmlFor="backendURL">Back end server & port: </label>
+       </td>
+       <td> 
+        <input
+          type="text"
+          id="backendURL"
           value={backendURL}
           onChange={(e) => setBackendURL(e.target.value)}
           placeholder="localhost:8000"
         />
-      </div>
+      </td>
+      </tr>
+      <tr>
+      <td>
+        <label htmlFor="startWord">Start Word: </label>
+      </td>
+      <td>
+        <input
+          type="text"
+          id="startWord"
+          value={startWord}
+          onChange={(e) => setStartWord(e.target.value)}
+          placeholder="Start word"
+        />
+      </td>
+      </tr>
+      <tr>
+      <td><label htmlFor="targetWord">Target Word:</label></td>
+      <td>
       <input
-        value={startWord}
-        onChange={(e) => setStartWord(e.target.value)}
-        placeholder="Start word"
-      />
-      <input
+        type="text"
+        id="targetWord"
         value={endWord}
         onChange={(e) => setEndWord(e.target.value)}
         placeholder="End word"
       />
-      <button onClick={findSolution}>Find Solution</button>
+      </td>
+      </tr>
+      </tbody>
+      </table>
+      <div>
+        <button onClick={findSolution}>Find Solution</button>
+      </div>
       <WordRow word={startWord} />
       {solution.map((word, index) => (
         <WordRow key={index} word={word} targetWord={endWord} />
