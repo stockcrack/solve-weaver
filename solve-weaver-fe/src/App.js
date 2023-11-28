@@ -98,6 +98,7 @@ const App = () => {
           id="backendURL"
           value={backendURL}
           onChange={(e) => setBackendURL(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter') { document.getElementById("startWord").focus(); }}}
           placeholder="localhost:8000"
         />
       </td>
@@ -112,6 +113,7 @@ const App = () => {
           id="startWord"
           value={startWord}
           onChange={(e) => setStartWord(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter') { document.getElementById("targetWord").focus(); }}}
           placeholder="Start word"
         />
       </td>
@@ -124,6 +126,7 @@ const App = () => {
         id="targetWord"
         value={endWord}
         onChange={(e) => setEndWord(e.target.value)}
+        onKeyDown={(e) => { if (e.key === 'Enter') { findSolution(); }}}
         placeholder="End word"
       />
       </td>
