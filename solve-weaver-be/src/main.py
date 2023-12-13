@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Query, Path
 from fastapi.middleware.cors import CORSMiddleware
 from enum import Enum
-import solve_weaver as sw
+import src.solve_weaver as sw
 from typing import Union, Annotated, Any
 from pydantic import BaseModel
 import sys
@@ -49,9 +49,9 @@ def read_words(words: set, filename: str):
 def create_word_graph(words, excluded_words):
     return sw.build_word_graph(words - excluded_words, defaultdict(list))
 
-words4 = read_words(set(), 'four_letter_words.txt')
-words5 = read_words(set(), 'five_letter_words.txt')
-excluded_words = read_words(set(), 'excluded_words.txt')
+words4 = read_words(set(), 'src/four_letter_words.txt')
+words5 = read_words(set(), 'src/five_letter_words.txt')
+excluded_words = read_words(set(), 'src/excluded_words.txt')
 word_graph4 = create_word_graph(words4, excluded_words)
 print(f"Word_graph4 length is {len(word_graph4)}")
 word_graph5 = create_word_graph(words5, excluded_words)
@@ -79,6 +79,10 @@ def getwordladder(start: str, end: str) -> list[str] | None:
     print(f"Path from {start} to {end} is {path}.")
     # return { "result": path }
     return path
+
+@app.get("/")
+async def root():
+    return {"message": "Running solve-weaver-be on port 8000"}
 
 @app.get("/wordladder/")
 async def getwordladder1(start:Annotated[str, Query(min_length=4, max_length=5, title = "Starting word")], 

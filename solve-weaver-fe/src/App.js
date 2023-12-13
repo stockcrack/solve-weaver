@@ -39,7 +39,7 @@ const WordRow = ({ word, targetWord }) => {
 
 const getWordLadder = async (backendURL, startWord, endWord) => {
   // Base URL can be set as an environment variable or configuration setting
-  var baseUrl = `https://${backendURL}/wordladder`;
+  var baseUrl = `http://${backendURL}/wordladder`;
 
   try {
     const response = await fetch(`${baseUrl}/${startWord}/${endWord}`);
