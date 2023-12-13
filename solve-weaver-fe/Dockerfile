@@ -4,7 +4,7 @@
 # If you need more help, visit the Dockerfile reference guide at
 # https://docs.docker.com/engine/reference/builder/
 
-ARG NODE_VERSION=21.2.0
+ARG NODE_VERSION=21.3.0
 
 ################################################################################
 # Use node image for base image for all stages.
@@ -15,13 +15,22 @@ WORKDIR /usr/src/solve-weaver-fe
 
 # Magic from ChatGPT to let recent Node version use old OpenSSL library
 ENV NODE_OPTIONS=--openssl-legacy-provider
+ENV publicPath /usr/src/solve-weaver-fe/
 
-# Copy the rest of the source files into the image.
-COPY src/ /usr/src/solve-weaver-fe/src
-COPY public/ /usr/src/solve-weaver-fe/public
-COPY package.json /usr/src/solve-weaver-fe/
+COPY package.json .
+COPY package-lock.json .
+
+RUN npm ci 
 
 RUN npm install
+
+# Copy the rest of the source files into the image.
+COPY src src/
+COPY public public/
+
+RUN npm run build
+
+EXPOSE 3000
 
 # Run the application.
 CMD [ "npm", "start" ]

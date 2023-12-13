@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  be:
+    build: solve-weaver-be
+    volumes:
+      - ./solve-weaver-be:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - UVICORN_HOST=0.0.0.0
+      - UVICORN_PORT=8000
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+
+  fe:
+    build: solve-weaver-fe
+    volumes:
+      - ./solve-weaver-fe:/app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    tty: true
+    command: npm start

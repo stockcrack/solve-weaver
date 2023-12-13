@@ -37,13 +37,27 @@ const WordRow = ({ word, targetWord }) => {
   );
 };
 
+function ErrorMessage({ msg }) {
+  return (
+    <div>
+      <p style={{ color: 'red', fontWeight: 'bold' }}>
+          {msg}
+      </p>
+    </div>
+  );
+}
+
+
 const getWordLadder = async (backendURL, startWord, endWord) => {
   // Base URL can be set as an environment variable or configuration setting
   var baseUrl = `http://${backendURL}/wordladder`;
 
   try {
-    const response = await fetch(`${baseUrl}/${startWord}/${endWord}`);
+    const url = `${baseUrl}/${startWord}/${endWord}`;
+    console.log(`Fetching ${url}`);
+    const response = await fetch(url);
     if (!response.ok) {
+      console.log(`HTTP error from ${url}! status: ${response.status}`);
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
@@ -55,6 +69,7 @@ const getWordLadder = async (backendURL, startWord, endWord) => {
     return data; // Your API should return the solution in JSON format
   } catch (error) {
     console.error('There was a problem with the fetch operation:', error);
+    return toString(error);
   }
 };
 
@@ -64,6 +79,7 @@ const App = () => {
   const [startWord, setStartWord] = useState('');
   const [endWord, setEndWord] = useState('');
   const [solution, setSolution] = useState([]);
+  const [errorMessage, setErrorMessage] = useState('');
 
   // Function to call the REST API and set the solution
   const findSolution = async () => {
@@ -71,15 +87,20 @@ const App = () => {
     // and set the solution with the response data
     var solution = await getWordLadder(backendURL, startWord, endWord);
     console.log(`Got a solution of type ${typeof(solution)}`);
-    if (solution) {
+    if (Array.isArray(solution) && solution.length > 0) {
       if (solution.length > 2) {
         solution.shift();
         solution.pop();
+        setErrorMessage('');
+      } else {
+        solution = [];
+        setErrorMessage('No solution found.');
       }
       solution.map((word, index) => (console.log(`${index}: ${word}`)));
       setSolution(solution);
-    } else {
+    } else if (typeof(solution) === 'string') {
       setSolution([]);
+      setErrorMessage(`${solution} returned from ${backendURL}`);
     }
   };
 
@@ -141,34 +162,9 @@ const App = () => {
         <WordRow key={index} word={word} targetWord={endWord} />
       ))}
       <WordRow word={endWord} />
+     <ErrorMessage msg={errorMessage} />
     </div>
   );
 };
 
 export default App;
-
-
-/*
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
-
-export default App;
-*/
